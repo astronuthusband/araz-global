@@ -2696,6 +2696,10 @@ body {
 
 }
 
+.form-hidden {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .chatbot {
     right: 20px;
@@ -2705,3 +2709,4 @@ body {
     right: 20px;
   }
 }
+

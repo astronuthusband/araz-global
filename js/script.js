@@ -217,48 +217,95 @@ function initCustomCursor() {
   }
 
   /* -------------------- Contact / enquiry form validation -------------------- */
-  function initContactForm() {
-    var forms = document.querySelectorAll('[data-validate]');
-    forms.forEach(function (form) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var valid = true;
-        var fields = form.querySelectorAll('[required]');
+function initContactForm() {
+  var forms = document.querySelectorAll('[data-validate]');
 
-        fields.forEach(function (field) {
-          var wrap = field.closest('.form-field');
-          var errorEl = wrap ? wrap.querySelector('.form-error') : null;
-          var message = '';
+  forms.forEach(function (form) {
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-          if (!field.value.trim()) {
-            message = 'This field is required.';
-          } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim())) {
-            message = 'Enter a valid email address.';
-          } else if (field.type === 'tel' && field.value.trim() && !/^[0-9+\-\s()]{7,}$/.test(field.value.trim())) {
-            message = 'Enter a valid phone number.';
-          }
+      var valid = true;
+      var fields = form.querySelectorAll('[required]');
 
-          if (message) {
-            valid = false;
-            if (wrap) wrap.classList.add('has-error');
-            if (errorEl) errorEl.textContent = message;
-          } else {
-            if (wrap) wrap.classList.remove('has-error');
-            if (errorEl) errorEl.textContent = '';
-          }
+      fields.forEach(function (field) {
+        var wrap = field.closest('.form-field');
+        var errorEl = wrap ? wrap.querySelector('.form-error') : null;
+        var message = '';
+
+        if (!field.value.trim()) {
+          message = 'This field is required.';
+        } else if (
+          field.type === 'email' &&
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim())
+        ) {
+          message = 'Enter a valid email address.';
+        } else if (
+          field.type === 'tel' &&
+          field.value.trim() &&
+          !/^[0-9+\-\s()]{7,}$/.test(field.value.trim())
+        ) {
+          message = 'Enter a valid phone number.';
+        }
+
+        if (message) {
+          valid = false;
+
+          if (wrap) wrap.classList.add('has-error');
+          if (errorEl) errorEl.textContent = message;
+        } else {
+          if (wrap) wrap.classList.remove('has-error');
+          if (errorEl) errorEl.textContent = '';
+        }
+      });
+
+      if (!valid) return;
+
+      var status =
+        form.parentElement.querySelector('.form-status') ||
+        form.querySelector('.form-status');
+
+      var submitButton = form.querySelector('button[type="submit"]');
+
+      try {
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.textContent = 'Sending...';
+        }
+
+        var formData = new FormData(form);
+
+        await fetch('/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams(formData).toString()
         });
 
-        if (!valid) return;
-
-        /* No backend is connected yet. Replace this block with a real
-           request (fetch / form service) when one becomes available. */
-        var status = form.parentElement.querySelector('.form-status') || form.querySelector('.form-status');
         form.reset();
         form.hidden = true;
-        if (status) status.classList.add('is-visible');
-      });
+
+        if (status) {
+          status.classList.add('is-visible');
+        }
+
+      } catch (error) {
+        console.error('Form submission error:', error);
+
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Send Enquiry';
+        }
+
+        if (status) {
+          status.textContent =
+            'Sorry, something went wrong. Please try again.';
+          status.classList.add('is-visible');
+        }
+      }
     });
-  }
+  });
+}
 
   /* -------------------- WhatsApp floating button -------------------- */
 function initWhatsApp() {
