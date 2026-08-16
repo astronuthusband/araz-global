@@ -54,14 +54,16 @@ The design was created around Araz Global's existing brand identity, using a pro
 
 ```text
 araz-global/
-├── assets/
-│   ├── images/
-│   ├── icons/
-│   └── logo.png
-├── css/
-├── js/
-├── index.html
-└── README.md
+├── assets/          # Images & icons
+├── css/             # Stylesheets
+├── js/              # JavaScript
+├── netlify/         # Netlify serverless functions
+├── *.html           # Website pages
+├── server.js        # Express server
+├── netlify.toml     # Netlify configuration
+├── package.json     # Dependencies
+├── .env             # Environment variables
+└── .gitignore
 ```
 
 ## Development
