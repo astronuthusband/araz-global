@@ -10,7 +10,6 @@
   document.addEventListener('DOMContentLoaded', function () {
     initHeader();
     initMobileNav();
-    if (hasFinePointer) initCustomCursor();
     initReveal();
     initFaq();
     initProjectFilter();
@@ -69,86 +68,7 @@
     });
   }
 
-  /* -------------------- Custom cursor -------------------- */
-function initCustomCursor() {
-  document.body.classList.add('has-custom-cursor');
 
-  var dot = document.createElement('div');
-  dot.className = 'cursor-dot';
-
-  var ring = document.createElement('div');
-  ring.className = 'cursor-ring';
-
-  document.body.appendChild(dot);
-  document.body.appendChild(ring);
-
-  var mouseX = window.innerWidth / 2;
-  var mouseY = window.innerHeight / 2;
-
-  var ringX = mouseX;
-  var ringY = mouseY;
-
-  var visible = false;
-
-  function showCursor() {
-    visible = true;
-    dot.style.opacity = '1';
-    ring.style.opacity = '0.7';
-  }
-
-  function hideCursor() {
-    visible = false;
-    dot.style.opacity = '0';
-    ring.style.opacity = '0';
-  }
-
-  window.addEventListener('mousemove', function (e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-
-    dot.style.transform =
-      'translate(' + mouseX + 'px, ' + mouseY + 'px) translate(-50%, -50%)';
-
-    if (!visible) {
-      showCursor();
-    }
-  }, { passive: true });
-
-  document.addEventListener('mouseleave', function () {
-    hideCursor();
-  });
-
-  document.addEventListener('mouseenter', function () {
-    showCursor();
-  });
-
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.16;
-    ringY += (mouseY - ringY) * 0.16;
-
-    ring.style.transform =
-      'translate(' + ringX + 'px, ' + ringY + 'px) translate(-50%, -50%)';
-
-    requestAnimationFrame(animateRing);
-  }
-
-  requestAnimationFrame(animateRing);
-
-  var hoverSelectors =
-    'a, button, input, textarea, select, .service-card, .project-card, .destination-card, [data-cursor-hover]';
-
-  document.addEventListener('mouseover', function (e) {
-    if (e.target.closest && e.target.closest(hoverSelectors)) {
-      ring.classList.add('is-hover');
-    }
-  });
-
-  document.addEventListener('mouseout', function (e) {
-    if (e.target.closest && e.target.closest(hoverSelectors)) {
-      ring.classList.remove('is-hover');
-    }
-  });
-}
 
   /* -------------------- Scroll reveal -------------------- */
   function initReveal() {
