@@ -1,3 +1,8 @@
+/* ===============================================
+netlify/functions/chat.js
+================================================= */
+
+
 const Groq = require("groq-sdk");
 
 exports.handler = async (event) => {
@@ -34,7 +39,7 @@ exports.handler = async (event) => {
         });
 
         const completion = await groq.chat.completions.create({
-            model: "llama-3.3-70b-versatile",
+            model: "openai/gpt-oss-120b",
 
             messages: [
                 {
